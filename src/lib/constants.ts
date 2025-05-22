@@ -1,0 +1,1 @@
+export const STORIES_PER_LOAD = 30; // Stories to load initially and with each 'Load More' for a topic 
