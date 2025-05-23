@@ -1,12 +1,12 @@
 # Hacker News Clone
 
-A modern, minimal Hacker News clone built with Next.js and TypeScript. Browse top stories, view details, and join the discussion—just like the original!
+A modern, minimal Hacker News clone built with Next.js and TypeScript. Browse top stories, view details
 
 ## Features
 - Top stories from Hacker News
-- Story details: title, score, author, time, comments
+- Story details: title, score, author, time
 - Responsive, clean UI
-- Clickable links to stories and comments
+- Clickable links to stories
 
 ## Setup
 
