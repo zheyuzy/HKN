@@ -97,62 +97,37 @@ export default async function TopicPage({ params }: { params: { topic: string } 
   }
 
   return (
-    <main className="max-w-4xl mx-auto py-8 px-4 bg-[#000000]">
-      {/* Header: HKN Title, Byline (Left) and Topic Navigation Buttons (Right) */}
-      <div className="flex items-start justify-between mb-8">
-        {/* Left Section: HKN Title and Byline */}
-        <div className="flex flex-col items-start">
-          {/* Inner container for HKN and Byline */}
-          <div className="flex flex-col items-start">
-            {/* HKN Title as Home Button */}
-            <Link href="/" className="flex items-center hover:opacity-80 transition-opacity duration-200">
-              <h1 className={`text-4xl font-bold ${rockSalt.className} text-white`}>
-                <span className="text-pink-400">H</span>
-                <span className="text-rose-400">K</span>
-                <span className="text-red-500">N</span>
-              </h1>
-            </Link>
-            {/* User's GitHub Link below HKN title */}
-            <a
-              href="https://github.com/zheyuzy"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-gray-700 hover:text-pink-400 text-xs transition-colors duration-200 mt-1"
+    <main className="max-w-3xl mx-auto py-6 px-4 bg-[#000000]">
+      {/* Simplified Header */}
+      <div className="flex items-center justify-between mb-8">
+        {/* Left: HKN Title */}
+        <Link href="/" className="hover:opacity-80 transition-opacity duration-200">
+          <h1 className={`text-2xl ${rockSalt.className} text-white`}>
+            <span className="text-pink-400">H</span>
+            <span className="text-rose-400">K</span>
+            <span className="text-red-500">N</span>
+          </h1>
+        </Link>
+
+        {/* Right: Topic Navigation */}
+        <div className="flex flex-wrap gap-2 justify-end">
+          {Object.keys(TOPIC_KEYWORDS).map((topic) => (
+            <Link
+              key={topic}
+              href={`/topics/${encodeURIComponent(topic)}`}
+              className={`px-2 py-1 text-xs transition-colors duration-200 ${
+                decodedTopic === topic 
+                  ? 'text-rose-400 border-b border-rose-400' 
+                  : 'text-gray-400 hover:text-gray-300'
+              }`}
             >
-              by zheyuzy
-            </a>
-          </div>
+              {topic === 'Dev/Software' ? 'Dev' : topic}
+            </Link>
+          ))}
         </div>
-
-        {/* Right Section: Topic Navigation Buttons */}
-        <div className="flex flex-col gap-2">
-          <div className="flex gap-2">
-            {Object.keys(TOPIC_KEYWORDS).slice(0, 3).map((topic) => (
-              <Link
-                key={topic}
-                href={`/topics/${encodeURIComponent(topic)}`}
-                className={`px-3 py-1 rounded-full text-xs transition-colors duration-200 whitespace-nowrap ${decodedTopic === topic ? 'bg-gray-700 text-rose-400' : 'bg-gray-800 hover:bg-gray-700 text-gray-300'}`}
-              >
-                {topic === 'Dev/Software' ? 'Dev/Prog' : topic}
-              </Link>
-            ))}
-          </div>
-          <div className="flex gap-2">
-            {Object.keys(TOPIC_KEYWORDS).slice(3).map((topic) => (
-              <Link
-                key={topic}
-                href={`/topics/${encodeURIComponent(topic)}`}
-                className={`px-3 py-1 rounded-full text-xs transition-colors duration-200 whitespace-nowrap ${decodedTopic === topic ? 'bg-gray-700 text-rose-400' : 'bg-gray-800 hover:bg-gray-700 text-gray-300'}`}
-              >
-                {topic}
-              </Link>
-            ))}
-          </div>
-        </div>
-
       </div>
 
-      {/* Render the Client Component for the story list and load more */}
+      {/* Story List */}
       <TopicStoryList
         initialStories={initialStories}
         allStoryIds={allStoryIds}

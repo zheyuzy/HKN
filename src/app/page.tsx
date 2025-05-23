@@ -159,146 +159,143 @@ export default function HomePage() {
   };
 
   return (
-    <main className="max-w-4xl mx-auto py-8 px-4 bg-[#000000]">
-      {/* Header: HKN (Left), Top News Title (Center), and Topic Buttons (Right) */}
-      <div className="flex items-center justify-between mb-8">
-        {/* Left Section: HKN Title and Byline */}
-        <div className="flex flex-col items-start">
-          <h1 className={`text-4xl font-bold ${rockSalt.className}`}>
-            <span className="text-pink-400">H</span>
-            <span className="text-rose-400">K</span>
-            <span className="text-red-500">N</span>
-          </h1>
-          {/* User's GitHub Link below HKN title */}
-          <a
-            href="https://github.com/zheyuzy"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-gray-800 hover:text-pink-400 text-xs transition-colors duration-200 mt-1"
-          >
-            by zheyuzy
-          </a>
-        </div>
+    <div className="bg-[#000000]">
+      {/* Full-width header */}
+      <div className="w-full bg-[#000000] border-b border-gray-800">
+        <div className="max-w-3xl mx-auto py-8 px-4">
+          <div className="flex items-center justify-between">
+            {/* Left: HKN Title */}
+            <Link href="/" className="hover:opacity-80 transition-opacity duration-200">
+              <h1 className={`text-2xl ${rockSalt.className} text-white`}>
+                <span className="text-pink-400">H</span>
+                <span className="text-rose-400">K</span>
+                <span className="text-red-500">N</span>
+              </h1>
+            </Link>
 
-        {/* Right Section: Topic Navigation Buttons */}
-        <div className="flex flex-col gap-2">
-          <div className="flex gap-2">
-            {['AI/ML', 'Finance/Crypto', 'Dev/Software'].map((topic) => (
-              <Link
-                key={topic}
-                href={`/topics/${encodeURIComponent(topic)}`}
-                className="px-3 py-1 bg-gray-800 hover:bg-gray-700 text-white rounded-full text-xs transition-colors duration-200 whitespace-nowrap"
-              >
-                {topic === 'Dev/Software' ? 'Dev/Prog' : topic}
-              </Link>
-            ))}
-          </div>
-          <div className="flex gap-2">
-            {['Hardware', 'Business / Startups', 'Other'].map((topic) => (
-              <Link
-                key={topic}
-                href={`/topics/${encodeURIComponent(topic)}`}
-                className="px-3 py-1 bg-gray-800 hover:bg-gray-700 text-white rounded-full text-xs transition-colors duration-200 whitespace-nowrap"
-              >
-                {topic}
-              </Link>
-            ))}
+            {/* Right: Topic Navigation */}
+            <div className="flex flex-wrap gap-2 justify-end">
+              {Object.keys(TOPIC_KEYWORDS).map((topic) => (
+                <Link
+                  key={topic}
+                  href={`/topics/${encodeURIComponent(topic)}`}
+                  className="px-2 py-1 text-xs transition-colors duration-200 text-gray-400 hover:text-gray-300"
+                >
+                  {topic === 'Dev/Software' ? 'Dev' : topic}
+                </Link>
+              ))}
+            </div>
           </div>
         </div>
-
       </div>
 
-      {loading ? (
-        <div className="text-lg text-white">Loading...</div>
-      ) : (
-        <div>
-          {Object.entries(displayedStoriesByTopic)
-             .sort(([topicA], [topicB]) => {
-               const order = ['AI/ML', 'Finance/Crypto', 'Dev/Software', 'Hardware', 'Business / Startups', 'Other'];
-               return order.indexOf(topicA) - order.indexOf(topicB);
-             })
-             .map(([topic, stories]) => stories.length >= MIN_STORIES_PER_TOPIC && (
-            <div 
-              key={topic} 
-              id={topic.toLowerCase().replace(/\s+/g, '-')}
-              className="mb-12 bg-gray-950/50 rounded-xl p-6 shadow-lg border border-gray-800 scroll-mt-24 flex gap-2"
-            >
-              {/* Left side: Topic Title */}
-              <div className="flex-shrink-0 w-24">
-                <Link href={`/topics/${encodeURIComponent(topic)}`} className="block">
-                  <h2 className={`text-xl font-bold border-b border-gray-700 pb-3 hover:underline whitespace-normal ${playfair.className} ${stories.length >= MIN_STORIES_PER_TOPIC ? 'text-pink-200' : 'text-white'}`}>
-                    {topic === 'Dev/Software' ? 'Dev/Prog' : topic}
-                  </h2>
-                </Link>
-              </div>
+      {/* Content with original width */}
+      <main className="max-w-4xl mx-auto py-8 px-4">
+        {loading ? (
+          <div className="text-lg text-white">Loading...</div>
+        ) : (
+          <div>
+            {Object.entries(displayedStoriesByTopic)
+               .sort(([topicA], [topicB]) => {
+                 const order = ['AI/ML', 'Finance/Crypto', 'Dev/Software', 'Hardware', 'Business / Startups', 'Other'];
+                 return order.indexOf(topicA) - order.indexOf(topicB);
+               })
+               .map(([topic, stories]) => stories.length >= MIN_STORIES_PER_TOPIC && (
+              <div 
+                key={topic} 
+                id={topic.toLowerCase().replace(/\s+/g, '-')}
+                className="mb-12 bg-gray-950/50 rounded-xl p-6 shadow-lg border border-gray-800 scroll-mt-24 flex gap-2"
+              >
+                {/* Left side: Topic Title */}
+                <div className="flex-shrink-0 w-24">
+                  <Link href={`/topics/${encodeURIComponent(topic)}`} className="block">
+                    <h2 className={`text-xl font-bold border-b border-gray-700 pb-3 hover:underline whitespace-normal ${playfair.className} ${stories.length >= MIN_STORIES_PER_TOPIC ? 'text-pink-200' : 'text-white'}`}>
+                      {topic === 'Dev/Software' ? 'Dev/Prog' : topic}
+                    </h2>
+                  </Link>
+                </div>
 
-              {/* Right side: News Grid and Load More */}
-              <div className="flex-1">
-                <ol className="grid grid-cols-2 gap-4">
-                  {stories.map(story => {
-                    const isNew = (Date.now() / 1000 - story.time) < 7200; // 2 hours in seconds
-                    return (
-                      <li 
-                        key={story.id} 
-                        className={`bg-gray-900/80 rounded-lg p-4 relative group hover:bg-gray-900 transition-colors duration-200`}
-                      >
-                        <a
-                          href={story.url || `https://news.ycombinator.com/item?id=${story.id}`}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="absolute inset-0 z-30"
+                {/* Right side: News Grid and Load More */}
+                <div className="flex-1">
+                  <ol className="grid grid-cols-2 gap-4">
+                    {stories.map(story => {
+                      const isNew = (Date.now() / 1000 - story.time) < 7200; // 2 hours in seconds
+                      return (
+                        <li 
+                          key={story.id} 
+                          className={`bg-gray-900/80 rounded-lg p-4 relative group hover:bg-gray-900 transition-colors duration-200`}
                         >
-                          <span className="sr-only">Read more about {story.title}</span>
-                        </a>
-                        <div className="relative z-20">
-                          <div className="flex items-start gap-2">
-                            <h3 className={`text-lg block mb-1 text-white line-clamp-3 group-hover:underline flex-1 ${playfair.className}`}>
-                              {story.title}
-                            </h3>
-                            {isNew && (
-                              <span className="px-2 py-0.5 bg-red-900/30 text-red-400 text-xs font-medium rounded-full whitespace-nowrap">
-                                NEW
-                              </span>
-                            )}
+                          <a
+                            href={story.url || `https://news.ycombinator.com/item?id=${story.id}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="absolute inset-0 z-30"
+                          >
+                            <span className="sr-only">Read more about {story.title}</span>
+                          </a>
+                          <div className="relative z-20">
+                            <div className="flex items-start gap-2">
+                              <h3 className={`text-lg block mb-1 text-white line-clamp-3 group-hover:underline flex-1 ${playfair.className}`}>
+                                {story.title}
+                              </h3>
+                              {isNew && (
+                                <span className="px-2 py-0.5 bg-red-900/30 text-red-400 text-xs font-medium rounded-full whitespace-nowrap">
+                                  NEW
+                                </span>
+                              )}
+                            </div>
+                            <div className="text-sm text-gray-400">
+                              {story.by} | {new Date(story.time * 1000).toLocaleString('en-GB', { weekday: 'short', day: '2-digit', month: '2-digit', year: '2-digit' })}
+                            </div>
                           </div>
-                          <div className="text-sm text-gray-400">
-                            {story.by} | {new Date(story.time * 1000).toLocaleString('en-GB', { weekday: 'short', day: '2-digit', month: '2-digit', year: '2-digit' })}
-                          </div>
-                        </div>
-                      </li>
-                    );
-                  })}
-                </ol>
-                {remainingStoryIdsByTopic[topic] && remainingStoryIdsByTopic[topic].length > 0 && (
-                  <div className="flex justify-center mt-6">
-                    <button
-                      onClick={() => handleLoadMoreTopic(topic)}
-                      disabled={loadingMoreByTopic[topic]}
-                      className="bg-gray-800 hover:bg-gray-700 text-white font-bold py-2 px-6 rounded-full disabled:opacity-50 transition-colors duration-200"
-                    >
-                      {`Load More ${topic}`}
-                    </button>
-                  </div>
-                )}
+                        </li>
+                      );
+                    })}
+                  </ol>
+                  {remainingStoryIdsByTopic[topic] && remainingStoryIdsByTopic[topic].length > 0 && (
+                    <div className="flex justify-center mt-6">
+                      <button
+                        onClick={() => handleLoadMoreTopic(topic)}
+                        disabled={loadingMoreByTopic[topic]}
+                        className="bg-gray-800 hover:bg-gray-700 text-white font-bold py-2 px-6 rounded-full disabled:opacity-50 transition-colors duration-200"
+                      >
+                        {`Load More ${topic}`}
+                      </button>
+                    </div>
+                  )}
 
-                {/* User's GitHub Link below Other topic */}
-                {topic === 'Other' && (
-                  <div className="flex justify-center mt-6">
-                    <a
-                      href="https://github.com/zheyuzy"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-gray-800 hover:text-pink-400 text-xs transition-colors duration-200"
-                    >
-                      by zheyuzy
-                    </a>
-                  </div>
-                )}
+                  {/* User's GitHub Link below Other topic */}
+                  {topic === 'Other' && (
+                    <div className="flex justify-center mt-6">
+                      <a
+                        href="https://github.com/zheyuzy"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-gray-800 hover:text-pink-400 text-xs transition-colors duration-200"
+                      >
+                        by zheyuzy
+                      </a>
+                    </div>
+                  )}
+                </div>
               </div>
-            </div>
-          ))}
-        </div>
-      )}
-    </main>
+            ))}
+          </div>
+        )}
+
+        {/* Global Load More Button */}
+        {loadedStoriesCount < allStoryIds.length && (
+          <div className="flex justify-center mt-8">
+            <button
+              onClick={handleLoadMoreNews}
+              disabled={loadingMoreGlobal}
+              className="bg-gray-800 hover:bg-gray-700 text-white font-bold py-2 px-6 rounded-full disabled:opacity-50 transition-colors duration-200"
+            >
+              {loadingMoreGlobal ? 'Loading...' : 'Load More News'}
+            </button>
+          </div>
+        )}
+      </main>
+    </div>
   );
 } 
