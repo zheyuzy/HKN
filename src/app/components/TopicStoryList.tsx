@@ -56,9 +56,21 @@ export default function TopicStoryList({ initialStories, allStoryIds, initialLoa
 
       // Filter stories for the current topic
       const topicStoriesBatch = newStoriesBatch.filter(story => {
-           const titleLower = story.title.toLowerCase();
-           const keywords = TOPIC_KEYWORDS[decodedTopic]?.map((k: string) => k.toLowerCase());
-           return keywords?.some((keyword: string) => titleLower.includes(keyword));
+        const titleLower = story.title.toLowerCase();
+        
+        if (decodedTopic === 'Other') {
+          // For the 'Other' topic, include stories that do NOT match any other topic keywords
+          const otherTopics = Object.keys(TOPIC_KEYWORDS).filter(topic => topic !== 'Other');
+          const isNotOtherTopic = otherTopics.every(topic => {
+            const keywords = TOPIC_KEYWORDS[topic]?.map((k: string) => k.toLowerCase()) || [];
+            return !keywords.some((keyword: string) => titleLower.includes(keyword));
+          });
+          return isNotOtherTopic;
+        } else {
+          // For specific topics, filter by their keywords
+          const keywords = TOPIC_KEYWORDS[decodedTopic]?.map((k: string) => k.toLowerCase()) || [];
+          return keywords.some((keyword: string) => titleLower.includes(keyword));
+        }
       });
 
       setStories(prevStories => [...prevStories, ...topicStoriesBatch]);
